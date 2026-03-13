@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 // import { Web3Context } from "../context/Web3Context";
 import { Navbar, Container, Button, Badge } from "react-bootstrap";
 import { Wallet, ShieldCheck } from "lucide-react";
@@ -34,12 +34,10 @@ export default function NavbarComponent() {
               style={{ fontSize: "0.9rem" }}
             >
               <Wallet size={16} />
-              {account.slice(0, 6)}...{account.slice(-4)}
             </div>
           </div>
           {/* ) : ( */}
           <Button
-            onClick={connectWallet}
             style={{
               backgroundColor: "#059669",
               borderColor: "#059669",
