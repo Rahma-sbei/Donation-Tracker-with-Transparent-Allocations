@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
 
 const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
@@ -21,9 +21,9 @@ const CONTRACT_ABI = [
   "event FundsSpent(string indexed category, uint256 amount, address indexed to)",
 ];
 
-export const Web3Context = createContext();
+const Web3Context = createContext();
 
-export const Web3Provider = ({ children }) => {
+const Web3Provider = ({ children }) => {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
   const [contract, setContract] = useState(null);
@@ -144,3 +144,5 @@ export const Web3Provider = ({ children }) => {
     </Web3Context.Provider>
   );
 };
+export { Web3Provider };
+export default Web3Context;

@@ -1,6 +1,3 @@
-import React from "react";
-import { Web3Provider } from "./context/Web3Context.jsx";
-import { Container, Row, Col } from "react-bootstrap";
 import NavbarComponent from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Donate from "./components/Donate";

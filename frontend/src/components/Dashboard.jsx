@@ -4,7 +4,7 @@ import { Card, Badge, ListGroup } from "react-bootstrap";
 import { Activity, Landmark, ArrowUpRight } from "lucide-react";
 
 export default function Dashboard() {
-  const { balance, events } = useContext(Web3Context);
+ const { balance, events } = useContext(Web3Context);
 
   // Design System Colors
   const primaryWarm = "#ea580c"; // Sunset Orange
@@ -128,7 +128,7 @@ export default function Dashboard() {
                 </div>
               </ListGroup.Item>
             ))
-          )}
+          )} */}
         </ListGroup>
       </Card>
     </div>
