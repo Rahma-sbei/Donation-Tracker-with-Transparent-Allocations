@@ -4,7 +4,7 @@ import { Card, Badge, ListGroup } from "react-bootstrap";
 import { Activity, Landmark, ArrowUpRight } from "lucide-react";
 
 export default function Dashboard() {
-  const { balance, events } = useContext(Web3Context);
+  // const { balance, events } = useContext(Web3Context);
 
   return (
     <div className="d-flex flex-column gap-4">
@@ -18,7 +18,7 @@ export default function Dashboard() {
             >
               Available Funds
             </p>
-            <h2 className="fw-bold text-dark m-0">{balance} ETH</h2>
+            <h2 className="fw-bold text-dark m-0">ETH</h2>
           </div>
           <div className="p-3 rounded-3" style={{ backgroundColor: "#ecfdf5" }}>
             <Landmark color="#059669" size={24} />
@@ -34,7 +34,7 @@ export default function Dashboard() {
         </Card.Header>
 
         <ListGroup variant="flush">
-          {events.length === 0 ? (
+          {/* {events.length === 0 ? (
             <div className="p-4 text-center text-muted">
               No spending events recorded yet.
             </div>
@@ -70,7 +70,7 @@ export default function Dashboard() {
                 </div>
               </ListGroup.Item>
             ))
-          )}
+          )} */}
         </ListGroup>
       </Card>
     </div>
