@@ -29,30 +29,37 @@ export default function Donate() {
     }
   };
 
+  // Design Theme Colors
+  const primaryWarm = "#ea580c"; // Sunset Orange
+  const gradientStart = "#f97316"; // Lighter vibrant orange for the gradient
+  const palePeach = "#ffedd5"; // Soft warm color for subtle text/icons
+
   return (
     <Card
       className="border-0 shadow-lg rounded-4 text-white"
       style={{
-        backgroundImage: "linear-gradient(to bottom right, #10b981, #0d9488)",
+        backgroundImage: `linear-gradient(135deg, ${gradientStart} 0%, ${primaryWarm} 100%)`,
       }}
     >
       <Card.Body className="p-4 p-lg-5">
         <div className="d-flex align-items-center gap-3 mb-3">
-          <Heart size={32} color="#a7f3d0" fill="#a7f3d0" />
-          <h3 className="fw-bold m-0">Make a Donation</h3>
+          <Heart size={32} color={palePeach} fill={palePeach} />
+          <h3 className="fw-bold m-0" style={{ letterSpacing: "-0.5px" }}>
+            Make a Donation
+          </h3>
         </div>
 
-        <p className="mb-4" style={{ color: "#d1fae5", lineHeight: "1.6" }}>
+        <p className="mb-4" style={{ color: palePeach, lineHeight: "1.6" }}>
           Your funds are locked in a smart contract and can only be spent on
           pre-approved categories.
         </p>
 
         <Form onSubmit={handleDonate}>
           <Form.Group className="mb-4">
-            <Form.Label style={{ color: "#d1fae5", fontWeight: "500" }}>
+            <Form.Label style={{ color: palePeach, fontWeight: "500" }}>
               Amount (ETH)
             </Form.Label>
-            <InputGroup>
+            <InputGroup className="rounded-3 overflow-hidden">
               <Form.Control
                 type="number"
                 step="0.001"
@@ -60,15 +67,18 @@ export default function Donate() {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 required
-                className="border-0 shadow-none text-white py-2"
-                style={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                className="border-0 shadow-none py-3"
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.15)",
+                  color: "#ffffff", // Keeps input text white
+                }}
               />
               <InputGroup.Text
-                className="border-0 border-start-0"
+                className="border-0 border-start-0 px-4"
                 style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  color: "#a7f3d0",
-                  fontWeight: "500",
+                  backgroundColor: "rgba(255, 255, 255, 0.15)",
+                  color: palePeach,
+                  fontWeight: "600",
                 }}
               >
                 ETH
@@ -79,11 +89,24 @@ export default function Donate() {
           <Button
             type="submit"
             disabled={loading || !contract}
-            className="w-100 py-3 fw-bold border-0"
+            className="w-100 py-3 fw-bold border-0 rounded-pill shadow-sm"
             style={{
               backgroundColor: "#ffffff",
-              color: "#047857",
+              color: primaryWarm,
+              fontSize: "1.05rem",
+              letterSpacing: "0.3px",
               opacity: loading || !contract ? 0.7 : 1,
+              transition: "transform 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              console.log("mouse in");
+              e.target.style.backgroundColor = "#c2410c";
+              if (!loading && contract)
+                e.target.style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              if (!loading && contract)
+                e.target.style.transform = "translateY(0)";
             }}
           >
             {loading ? "Processing..." : "Donate Now"}
