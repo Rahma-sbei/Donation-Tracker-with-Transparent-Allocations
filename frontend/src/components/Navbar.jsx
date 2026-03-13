@@ -1,55 +1,89 @@
 import React, { useContext } from "react";
-// import { Web3Context } from "../context/Web3Context";
+import { Web3Context } from "../context/Web3Context";
 import { Navbar, Container, Button, Badge } from "react-bootstrap";
 import { Wallet, ShieldCheck } from "lucide-react";
 
 export default function NavbarComponent() {
-  //   const { account, connectWallet, isAdmin } = useContext(Web3Context);
+  const { account, connectWallet, isAdmin } = useContext(Web3Context);
+
+  // Design System Colors
+  const primaryWarm = "#ea580c"; // Sunset Orange - warm, welcoming, and inspires action
+  const adminBadgeBg = "#ffedd5"; // Soft warm background
+  const adminBadgeText = "#9a3412"; // Deep warm text
+  const textDark = "#1e293b"; // Soft slate black for modern typography
 
   return (
-    <Navbar bg="white" className="shadow-sm border-bottom py-3">
-      <Container style={{ maxWidth: "1152px" }}>
-        <Navbar.Brand className="d-flex align-items-center gap-2 fw-bold text-dark m-0">
-          <ShieldCheck color="#10b981" size={32} />
-          ClearFund
+    <Navbar
+      bg="white"
+      className="shadow-sm border-bottom py-3"
+      // Removed the 5px solid black border
+    >
+      {/* Changed to fluid and added padding to match your new App.jsx layout */}
+      <Container fluid className="px-4 px-md-5">
+        <Navbar.Brand className="d-flex align-items-center gap-2 fw-bold m-0">
+          <ShieldCheck color={primaryWarm} size={32} />
+          <span
+            style={{
+              color: textDark,
+              fontSize: "1.4rem",
+              letterSpacing: "-0.5px",
+            }}
+          >
+            ClearFund
+          </span>
         </Navbar.Brand>
 
         <Navbar.Collapse className="justify-content-end">
-          {/* {account ? ( */}
-          <div className="d-flex align-items-center gap-3">
-            {/* {isAdmin && ( */}
-            <Badge
-              bg="success"
-              bg-opacity-25
-              text="success"
-              pill
-              className="px-3 py-2 fw-normal"
-              style={{ backgroundColor: "#d1fae5", color: "#065f46" }}
-            >
-              Admin
-            </Badge>
-            {/* //   )} */}
-            <div
-              className="d-flex align-items-center gap-2 bg-light px-3 py-2 rounded-3 text-secondary font-monospace"
-              style={{ fontSize: "0.9rem" }}
-            >
-              <Wallet size={16} />
-              {account.slice(0, 6)}...{account.slice(-4)}
+          {account ? (
+            <div className="d-flex align-items-center gap-3">
+              {isAdmin && (
+                <Badge
+                  pill
+                  className="px-3 py-2 fw-semibold"
+                  style={{
+                    backgroundColor: adminBadgeBg,
+                    color: adminBadgeText,
+                    border: "1px solid #fdba74",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  Admin
+                </Badge>
+              )}
+              <div
+                className="d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm"
+                style={{
+                  backgroundColor: "#f8fafc",
+                  color: "#475569",
+                  border: "1px solid #e2e8f0",
+                  fontSize: "0.95rem",
+                  fontWeight: "500",
+                }}
+              >
+                <Wallet size={18} color={primaryWarm} />
+                <span className="font-monospace">
+                  {account.slice(0, 6)}...{account.slice(-4)}
+                </span>
+              </div>
             </div>
-          </div>
-          {/* ) : ( */}
-          <Button
-            onClick={connectWallet}
-            style={{
-              backgroundColor: "#059669",
-              borderColor: "#059669",
-              fontWeight: "500",
-            }}
-            className="px-4 py-2 rounded-3"
-          >
-            Connect Wallet
-          </Button>
-          {/* )} */}
+          ) : (
+            <Button
+              onClick={connectWallet}
+              className="px-4 py-2 rounded-pill shadow-sm border-0"
+              style={{
+                backgroundColor: primaryWarm,
+                fontWeight: "600",
+                letterSpacing: "0.3px",
+                transition: "background-color 0.2s ease-in-out",
+              }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#c2410c")}
+              onMouseLeave={(e) =>
+                (e.target.style.backgroundColor = primaryWarm)
+              }
+            >
+              Connect Wallet
+            </Button>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
