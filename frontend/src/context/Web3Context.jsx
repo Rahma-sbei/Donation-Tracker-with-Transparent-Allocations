@@ -23,7 +23,7 @@ const CONTRACT_ABI = [
 
 export const Web3Context = createContext();
 
-export const Web3Provider = ({ children }) => {
+export default Web3Provider = ({ children }) => {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
   const [contract, setContract] = useState(null);

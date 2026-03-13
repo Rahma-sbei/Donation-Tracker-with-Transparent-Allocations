@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 // import { Web3Context } from '../context/Web3Context';
 import { Card, Badge, ListGroup } from "react-bootstrap";
 import { Activity, Landmark, ArrowUpRight } from "lucide-react";
