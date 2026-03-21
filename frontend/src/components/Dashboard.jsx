@@ -4,7 +4,7 @@ import { Card, Badge, ListGroup } from "react-bootstrap";
 import { Activity, Landmark, ArrowUpRight } from "lucide-react";
 
 export default function Dashboard() {
- const { balance, events } = useContext(Web3Context);
+  const { balance, events } = useContext(Web3Context);
 
   // Design System Colors
   const primaryWarm = "#ea580c"; // Sunset Orange
@@ -15,7 +15,7 @@ export default function Dashboard() {
 
   return (
     <div className="d-flex flex-column gap-4">
-      {/* Top Stat */}
+      {/* Display some stats */}
       <Card className="border-0 shadow-sm rounded-4">
         <Card.Body className="p-4 d-flex justify-content-between align-items-center">
           <div>

@@ -2,6 +2,8 @@ import NavbarComponent from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Donate from "./components/Donate";
 import AdminPanel from "./components/AdminPanel";
+import { Web3Provider } from "./context/Web3Context";
+import { Container, Col, Row } from "react-bootstrap";
 
 export default function App() {
   //console.log("App is rendering");
