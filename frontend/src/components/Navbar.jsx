@@ -6,11 +6,11 @@ import { Wallet, ShieldCheck } from "lucide-react";
 export default function NavbarComponent() {
   const { account, connectWallet, isAdmin } = useContext(Web3Context);
 
-  // Design System Colors
-  const primaryWarm = "#ea580c"; // Sunset Orange - warm, welcoming, and inspires action
-  const adminBadgeBg = "#ffedd5"; // Soft warm background
-  const adminBadgeText = "#9a3412"; // Deep warm text
-  const textDark = "#1e293b"; // Soft slate black for modern typography
+  // Define main colors
+  const primaryWarm = "#ea580c"; // buttons
+  const adminBadgeBg = "#ffedd5"; // backgrounds
+  const adminBadgeText = "#9a3412"; // clicked/hovered-over buttons
+  const textDark = "#1e293b"; // text
 
   return (
     <Navbar
