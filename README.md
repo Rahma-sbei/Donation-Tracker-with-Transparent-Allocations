@@ -47,8 +47,8 @@ The oroject can be set up locally following these steps:
 **1. Clone the repo**
 
 ```bash
-git clone https://github.com/yourusername/donation-tracker.git
-cd donation-tracker
+git clone https://github.com/Rahma-sbei/Donation-Tracker-with-Transparent-Allocations.git
+cd Donation-Tracker-with-Transparent-Allocations
 ```
 
 **2. Install Dependencies**
