@@ -1,6 +1,6 @@
 # ClearFund-Donation Tracker with Transparent Allocations
 
-![banner](https://user-images.githubusercontent.com/Rahma-sbei/banner-placeholder.png)
+  <img src="frontend\src\assets\lp.png" />
 
 A **Web3-powered donation tracker** that allows organizations to receive donations in ETH and spend funds only in **pre-approved categories**, with full transparency + role-based access using blockchain technology.
 
