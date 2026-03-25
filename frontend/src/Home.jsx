@@ -15,7 +15,6 @@ export default function Home() {
           backgroundColor: "#f9fafb",
           minHeight: "100vh",
           fontFamily: "system-ui, sans-serif",
-          border: "2px solid black",
         }}
       >
         <NavbarComponent />
@@ -39,17 +38,12 @@ export default function Home() {
 
           <div
             style={{
-              border: "1px solid black",
               gap: "35px",
               display: "flex",
               justifyContent: "center",
             }}
           >
-            <Col
-              lg={8}
-              className="d-flex flex-column gap-4"
-              style={{ border: "1px solid black" }}
-            >
+            <Col lg={8} className="d-flex flex-column gap-4">
               <Dashboard />
               <AdminPanel />
             </Col>

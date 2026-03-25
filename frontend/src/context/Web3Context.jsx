@@ -1,7 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
 
-const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
+
 const CONTRACT_ABI = [
   "function donate() payable",
   "function addCategory(string name)",
@@ -24,6 +25,8 @@ const CONTRACT_ABI = [
 export const Web3Context = createContext();
 
 export const Web3Provider = ({ children }) => {
+  // console.log("helloo", import.meta.env.VITE_CONTRACT_ADDRESS);
+
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
   const [contract, setContract] = useState(null);
@@ -54,7 +57,6 @@ export const Web3Provider = ({ children }) => {
           signer,
         );
 
-        // OpenZeppelin's DEFAULT_ADMIN_ROLE is exactly 32 bytes of zeros
         const adminRole = ethers.ZeroHash;
         const adminStatus = await appContract.hasRole(adminRole, address);
 
