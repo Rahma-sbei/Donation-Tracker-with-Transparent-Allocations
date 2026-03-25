@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import { ArrowBigRight } from "lucide-react";
 function App() {
   // Initialize the navigation hook
   const navigate = useNavigate();
@@ -38,10 +38,17 @@ function App() {
       padding: "12px 30px",
       fontSize: "1.1rem",
       fontWeight: 600,
-      borderRadius: "8px",
       transition: "all 0.3s ease",
       boxShadow: `0 4px 15px rgba(234, 88, 12, 0.3)`,
       cursor: "pointer",
+      borderRadius: "40px",
+      width: "250px",
+      letterSpacing: "2px",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "10px",
     },
     card: {
       backgroundColor: "white",
@@ -95,7 +102,6 @@ function App() {
           <div style={styles.brand}>
             <span style={{ color: colors.primaryWarm }}>Clear</span>Fund
           </div>
-          {/* navigate to /home */}
           <button
             onClick={() => navigate("/home")}
             className="hover-btn"
@@ -132,8 +138,19 @@ function App() {
                 onClick={() => navigate("/home")}
                 className="hover-btn btn-lg"
                 style={styles.btnPrimary}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.gap = "20px";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.gap = "5px";
+                }}
               >
                 Get Started
+                <ArrowBigRight
+                  style={{ marginTop: "3px" }}
+                  size={18}
+                  color="white"
+                />
               </button>
             </div>
           </div>
