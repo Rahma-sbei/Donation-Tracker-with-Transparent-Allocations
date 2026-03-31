@@ -90,21 +90,28 @@ export default function Donate() {
             type="submit"
             disabled={loading || !contract}
             className="w-100 py-3 fw-bold border-0 rounded-pill shadow-sm"
+            bg=""
             style={{
-              backgroundColor: "#ffffff",
-              color: primaryWarm,
+              color: "#c2410c",
               fontSize: "1.05rem",
               letterSpacing: "0.3px",
               opacity: loading || !contract ? 0.7 : 1,
               transition: "transform 0.2s ease",
+              border: "1px solid black",
+              backgroundColor: palePeach,
             }}
             onMouseEnter={(e) => {
               console.log("mouse in");
               e.target.style.backgroundColor = "#c2410c";
+              e.target.style.color = "white";
+
               if (!loading && contract)
                 e.target.style.transform = "translateY(-2px)";
             }}
             onMouseLeave={(e) => {
+              e.target.style.backgroundColor = palePeach;
+              e.target.style.color = "#c2410c";
+
               if (!loading && contract)
                 e.target.style.transform = "translateY(0)";
             }}

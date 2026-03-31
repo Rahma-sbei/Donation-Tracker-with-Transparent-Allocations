@@ -150,6 +150,7 @@ export default function NavbarComponent() {
               {isAdmin && (
                 <Badge
                   pill
+                  bg=""
                   className="px-3 py-2 fw-semibold"
                   style={{
                     backgroundColor: adminBadgeBg,
