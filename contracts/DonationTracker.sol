@@ -6,40 +6,66 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 contract DonationTracker is AccessControl {
     //defining roles: Admin
     //admin can withdraw money
+    //spender can spend money
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant SPENDER_ROLE = keccak256("SPENDER_ROLE");
 
     // Total ETH received
     uint256 public totalDonations;
 
+    //define category struct
+     struct Category {
+        uint256 id;
+        string name;
+    }
+
     // List of allowed categories
-    string[] public categoryNames;
+    Category[] private categories;
 
     // Track how much was spent per category
-    mapping(string => uint256) public categorySpent;
+    mapping(uint256 => uint256) private categorySpent;
 
     // Track valid categories
-    mapping(string => bool) public isValidCategory;
+    mapping(uint256 => bool) public isValidCategory;
 
-    event CategoryAdded(string name);
+
+
+    event CategoryAdded(uint256 id, string name);
     event DonationReceived(address indexed donor, uint256 amount);
-    event FundsSpent(string indexed category, uint256 amount, address indexed to);
-
+    event FundsSpent(
+        uint256 indexed categoryId,
+        address indexed recipient,
+        uint256 amount,
+        string memo
+    );
 
     constructor() {
-    _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    _grantRole(ADMIN_ROLE, msg.sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(ADMIN_ROLE, msg.sender);
+        _grantRole(SPENDER_ROLE, msg.sender);
     }
+
+    //category managment fucntions
 
     // adding new category only callable by the admin
-    function addCategory(string memory name) public onlyRole(ADMIN_ROLE)
-    {
-        require(!isValidCategory[name], "Category already exists");
+    function addCategory(string memory name) public onlyRole(ADMIN_ROLE) {
+        uint256 id = categories.length;
 
-        isValidCategory[name] = true;
-        categoryNames.push(name);
+        categories.push(Category(id, name));
+        isValidCategory[id] = true;
 
-        emit CategoryAdded(name);
+        emit CategoryAdded(id, name);
     }
+
+    function categoriesCount() public view returns (uint256) {
+        return categories.length;
+    }
+
+    function getCategory(uint256 id) public view returns (Category memory) {
+        require(isValidCategory[id], "Invalid category");
+        return categories[id];
+    }
+
 
     //donate fucntion: callable by everyone
     function donate() public payable {
@@ -50,29 +76,31 @@ contract DonationTracker is AccessControl {
         emit DonationReceived(msg.sender, msg.value);
     }
 
-    //spending funds from a specific category, only callable by admin
-    function spend(string memory category, uint256 amount, address payable to) public onlyRole(ADMIN_ROLE)
-    {
-        require(isValidCategory[category], "Invalid category");
-        require(address(this).balance >= amount, "Not enough ETH in contract");
+//spending funds
 
-        // Update spent before sending ETH to prevent reentrancy attacks
-        categorySpent[category] += amount;
+    function spend(
+        uint256 categoryId,
+        uint256 amount,
+        address payable recipient,
+        string calldata memo
+    ) public onlyRole(SPENDER_ROLE) {
 
-        // Transfer ETH
-        (bool success, ) = to.call{value: amount}("");
-        require(success, "ETH transfer failed");
+        require(isValidCategory[categoryId], "Invalid category");
+        require(address(this).balance >= amount, "Insufficient balance");
 
-        emit FundsSpent(category, amount, to);
+        categorySpent[categoryId] += amount;
+
+        (bool success, ) = recipient.call{value: amount}("");
+        require(success, "Transfer failed");
+
+        emit FundsSpent(categoryId, recipient, amount, memo);
     }
 
-    //get category names
-    function getCategoryNames() public view returns (string[] memory) {
-        return categoryNames;
+    function spentByCategory(uint256 id) public view returns (uint256) {
+        return categorySpent[id];
     }
 
-    //get contract balance
-    function getBalance() public view returns (uint256) {
+    function availableBalance() public view returns (uint256) {
         return address(this).balance;
     }
 }
