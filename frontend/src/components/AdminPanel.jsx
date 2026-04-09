@@ -5,25 +5,44 @@ import { ethers } from "ethers";
 import { Settings, Send } from "lucide-react";
 
 export default function AdminPanel() {
-  const { contract, isAdmin, fetchData, provider } = useContext(Web3Context);
+  const { writeContract, readContract, isAdmin, fetchData } =
+    useContext(Web3Context);
+
   const [category, setCategory] = useState("");
+
   const [spendDetails, setSpendDetails] = useState({
-    category: "",
+    categoryId: "",
     amount: "",
     destination: "",
+    memo: "",
   });
+
   const [loading, setLoading] = useState(false);
 
   if (!isAdmin) return null;
 
+  // ---------------------------
+  // ADD CATEGORY
+  // ---------------------------
   const handleAddCategory = async (e) => {
     e.preventDefault();
+
+    if (!writeContract) {
+      alert("Connect wallet first");
+      return;
+    }
+
     try {
       setLoading(true);
-      const tx = await contract.addCategory(category);
+
+      const tx = await writeContract.addCategory(category);
       await tx.wait();
+
       setCategory("");
       alert("Category added successfully!");
+
+      // refresh public data
+      if (readContract) await fetchData(readContract);
     } catch (error) {
       console.error(error);
     } finally {
@@ -31,19 +50,41 @@ export default function AdminPanel() {
     }
   };
 
+  // ---------------------------
+  // SPEND FUNDS
+  // ---------------------------
   const handleSpend = async (e) => {
     e.preventDefault();
+
+    if (!writeContract) {
+      alert("Connect wallet first");
+      return;
+    }
+
     try {
       setLoading(true);
+
       const amountWei = ethers.parseEther(spendDetails.amount);
-      const tx = await contract.spend(
-        spendDetails.category,
+
+      const tx = await writeContract.spend(
+        Number(spendDetails.categoryId),
         amountWei,
         spendDetails.destination,
+        spendDetails.memo,
       );
+
       await tx.wait();
-      setSpendDetails({ category: "", amount: "", destination: "" });
-      await fetchData(contract, provider);
+
+      setSpendDetails({
+        categoryId: "",
+        amount: "",
+        destination: "",
+        memo: "",
+      });
+
+      // refresh public data
+      if (readContract) await fetchData(readContract);
+
       alert("Funds routed successfully!");
     } catch (error) {
       console.error(error);
@@ -52,21 +93,21 @@ export default function AdminPanel() {
     }
   };
 
-  // Design System Colors for Secure Admin Area
-  const primaryWarm = "#ea580c"; // Sunset Orange
-  const bgDark = "#0f172a"; // Deep Slate (Premium, secure dark tone)
-  const textMuted = "#94a3b8"; // Slate 400
+  // ---------------------------
+  // STYLES
+  // ---------------------------
+  const primaryWarm = "#ea580c";
+  const bgDark = "#0f172a";
+  const textMuted = "#94a3b8";
   const inputBg = "rgba(255, 255, 255, 0.04)";
   const inputBorder = "rgba(255, 255, 255, 0.08)";
 
-  // Custom styling for dark form inputs
   const darkInputStyle = {
     backgroundColor: inputBg,
     border: `1px solid ${inputBorder}`,
     color: "#ffffff",
     boxShadow: "none",
     padding: "0.75rem 1rem",
-    transition: "border-color 0.2s ease",
   };
 
   return (
@@ -80,86 +121,65 @@ export default function AdminPanel() {
           style={{ borderBottom: `1px solid ${inputBorder}` }}
         >
           <div
-            className="p-2 rounded-3 d-flex align-items-center justify-content-center"
+            className="p-2 rounded-3"
             style={{ backgroundColor: "rgba(234, 88, 12, 0.15)" }}
           >
             <Settings color={primaryWarm} size={24} />
           </div>
-          <h4 className="m-0 fw-bold" style={{ letterSpacing: "-0.5px" }}>
-            Admin Control Panel
-          </h4>
+          <h4 className="m-0 fw-bold">Admin Control Panel</h4>
         </div>
 
         <Row className="g-5">
-          {/* Add Category Form */}
+          {/* ADD CATEGORY */}
           <Col md={6}>
             <Form onSubmit={handleAddCategory}>
-              <h6
-                className="fw-semibold mb-3"
-                style={{ color: textMuted, letterSpacing: "0.5px" }}
-              >
-                1. Add Approved Category
+              <h6 className="mb-3" style={{ color: textMuted }}>
+                Add Category
               </h6>
-              <Form.Group className="mb-4">
-                <Form.Control
-                  type="text"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder="e.g., Marketing, Hardware"
-                  style={darkInputStyle}
-                  className="rounded-3"
-                  required
-                />
-              </Form.Group>
+
+              <Form.Control
+                type="text"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="e.g., Marketing"
+                style={darkInputStyle}
+                className="rounded-3 mb-4"
+                required
+              />
+
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-100 border-0 fw-semibold rounded-pill py-2 shadow-sm"
-                style={{
-                  backgroundColor: "#1e293b", // Slate 800
-                  color: "#f8fafc",
-                  transition: "background-color 0.2s ease",
-                }}
-                onMouseEnter={(e) =>
-                  (e.target.style.backgroundColor = "#334155")
-                }
-                onMouseLeave={(e) =>
-                  (e.target.style.backgroundColor = "#1e293b")
-                }
+                disabled={loading || !writeContract}
+                className="w-100 rounded-pill"
               >
                 Add Category
               </Button>
             </Form>
           </Col>
 
-          {/* Spend Funds Form */}
+          {/* SPEND */}
           <Col md={6}>
             <Form onSubmit={handleSpend}>
-              <h6
-                className="fw-semibold mb-3"
-                style={{ color: textMuted, letterSpacing: "0.5px" }}
-              >
-                2. Route Funds
+              <h6 className="mb-3" style={{ color: textMuted }}>
+                Route Funds
               </h6>
 
-              <Form.Group className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="Category Name"
-                  value={spendDetails.category}
-                  onChange={(e) =>
-                    setSpendDetails({
-                      ...spendDetails,
-                      category: e.target.value,
-                    })
-                  }
-                  style={darkInputStyle}
-                  className="rounded-3"
-                  required
-                />
-              </Form.Group>
+              <Form.Control
+                type="number"
+                placeholder="Category ID"
+                value={spendDetails.categoryId}
+                onChange={(e) =>
+                  setSpendDetails({
+                    ...spendDetails,
+                    categoryId: e.target.value,
+                  })
+                }
+                style={darkInputStyle}
+                className="rounded-3 mb-3"
+                required
+              />
 
-              <Row className="g-2 mb-4">
+              <Row className="g-2 mb-3">
                 <Col xs={4}>
                   <Form.Control
                     type="number"
@@ -177,6 +197,7 @@ export default function AdminPanel() {
                     required
                   />
                 </Col>
+
                 <Col xs={8}>
                   <Form.Control
                     type="text"
@@ -195,28 +216,25 @@ export default function AdminPanel() {
                 </Col>
               </Row>
 
+              {/* NEW: memo field */}
+              <Form.Control
+                type="text"
+                placeholder="Memo (optional)"
+                value={spendDetails.memo}
+                onChange={(e) =>
+                  setSpendDetails({
+                    ...spendDetails,
+                    memo: e.target.value,
+                  })
+                }
+                style={darkInputStyle}
+                className="rounded-3 mb-4"
+              />
+
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-100 border-0 fw-bold d-flex justify-content-center align-items-center gap-2 rounded-pill py-2 shadow-sm"
-                style={{
-                  backgroundColor: primaryWarm,
-                  color: "#ffffff",
-                  transition: "all 0.2s ease",
-                  opacity: loading ? 0.7 : 1,
-                }}
-                onMouseEnter={(e) => {
-                  if (!loading) {
-                    e.target.style.backgroundColor = "#c2410c";
-                    e.target.style.transform = "translateY(-2px)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!loading) {
-                    e.target.style.backgroundColor = primaryWarm;
-                    e.target.style.transform = "translateY(0)";
-                  }
-                }}
+                disabled={loading || !writeContract}
+                className="w-100 rounded-pill"
               >
                 <Send size={18} />{" "}
                 {loading ? "Executing..." : "Execute Transfer"}

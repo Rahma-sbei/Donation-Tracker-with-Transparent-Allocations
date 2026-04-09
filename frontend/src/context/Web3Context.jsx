@@ -39,6 +39,8 @@ export const Web3Provider = ({ children }) => {
   const [writeContract, setWriteContract] = useState(null);
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSpender, setIsSpender] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   const [balance, setBalance] = useState("0");
@@ -93,11 +95,14 @@ export const Web3Provider = ({ children }) => {
 
       // role check
       const adminRole = await contract.ADMIN_ROLE();
+      const spenderRole = await contract.SPENDER_ROLE();
       const adminStatus = await contract.hasRole(adminRole, address);
+      const spenderStatus = await contract.hasRole(spenderRole, address);
 
       setAccount(address);
       setWriteContract(contract);
       setIsAdmin(adminStatus);
+      setIsSpender(spenderStatus);
     } catch (error) {
       console.error("Connection error:", error);
     } finally {
@@ -164,16 +169,14 @@ export const Web3Provider = ({ children }) => {
     };
   }, []);
 
-  const contract = writeContract || readContract;
-
   return (
     <Web3Context.Provider
       value={{
         account,
-        contract,
         readContract,
         writeContract,
         isAdmin,
+        isSpender,
         loading,
         balance,
         events,

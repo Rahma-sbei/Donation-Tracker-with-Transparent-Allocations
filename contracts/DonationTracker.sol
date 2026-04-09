@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract DonationTracker is AccessControl {
     //defining roles: Admin
-    //admin can withdraw money
+    //admin can manage categories
     //spender can spend money
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant SPENDER_ROLE = keccak256("SPENDER_ROLE");
