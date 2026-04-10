@@ -1,9 +1,9 @@
 import NavbarComponent from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Donate from "./components/Donate";
-import AdminPanel from "./components/AdminPanel";
+import ControlPanel from "./components/ControlPanel";
 import { Web3Provider } from "./context/Web3Context";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col } from "react-bootstrap";
 
 export default function Home() {
   //console.log("App is rendering");
@@ -45,7 +45,7 @@ export default function Home() {
           >
             <Col lg={8} className="d-flex flex-column gap-4">
               <Dashboard />
-              <AdminPanel />
+              <ControlPanel />
             </Col>
 
             <Col lg={3}>

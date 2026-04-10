@@ -5,22 +5,38 @@ import { ethers } from "ethers";
 import { Heart } from "lucide-react";
 
 export default function Donate() {
-  const { contract, fetchData, provider } = useContext(Web3Context);
+  const { writeContract, readContract, fetchData } = useContext(Web3Context);
+
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleDonate = async (e) => {
     e.preventDefault();
+
     if (!amount || isNaN(amount)) return;
+
+    // check wallet is connected
+    if (!writeContract) {
+      alert("Please connect your wallet first.");
+      return;
+    }
 
     try {
       setLoading(true);
-      const tx = await contract.donate({ value: ethers.parseEther(amount) });
-      await tx.wait();
+
+      const don = await writeContract.donate({
+        value: ethers.parseEther(amount),
+      });
+
+      await don.wait();
 
       setAmount("");
       alert("Thank you for your donation!");
-      await fetchData(contract, provider);
+
+      //refresh PUBLIC data
+      if (readContract) {
+        await fetchData(readContract);
+      }
     } catch (error) {
       console.error(error);
       alert("Donation failed. Check console.");
@@ -29,10 +45,10 @@ export default function Donate() {
     }
   };
 
-  // Design Theme Colors
-  const primaryWarm = "#ea580c"; // Sunset Orange
-  const gradientStart = "#f97316"; // Lighter vibrant orange for the gradient
-  const palePeach = "#ffedd5"; // Soft warm color for subtle text/icons
+  // Theme Colors
+  const primaryWarm = "#ea580c";
+  const gradientStart = "#f97316";
+  const palePeach = "#ffedd5";
 
   return (
     <Card
@@ -44,21 +60,18 @@ export default function Donate() {
       <Card.Body className="p-4 p-lg-5">
         <div className="d-flex align-items-center gap-3 mb-3">
           <Heart size={32} color={palePeach} fill={palePeach} />
-          <h3 className="fw-bold m-0" style={{ letterSpacing: "-0.5px" }}>
-            Make a Donation
-          </h3>
+          <h3 className="fw-bold m-0">Make a Donation</h3>
         </div>
 
-        <p className="mb-4" style={{ color: palePeach, lineHeight: "1.6" }}>
+        <p className="mb-4" style={{ color: palePeach }}>
           Your funds are locked in a smart contract and can only be spent on
           pre-approved categories.
         </p>
 
         <Form onSubmit={handleDonate}>
           <Form.Group className="mb-4">
-            <Form.Label style={{ color: palePeach, fontWeight: "500" }}>
-              Amount (ETH)
-            </Form.Label>
+            <Form.Label style={{ color: palePeach }}>Amount (ETH)</Form.Label>
+
             <InputGroup className="rounded-3 overflow-hidden">
               <Form.Control
                 type="number"
@@ -70,11 +83,12 @@ export default function Donate() {
                 className="border-0 shadow-none py-3"
                 style={{
                   backgroundColor: "rgba(255, 255, 255, 0.15)",
-                  color: "#ffffff", // Keeps input text white
+                  color: "#ffffff",
                 }}
               />
+
               <InputGroup.Text
-                className="border-0 border-start-0 px-4"
+                className="border-0 px-4"
                 style={{
                   backgroundColor: "rgba(255, 255, 255, 0.15)",
                   color: palePeach,
@@ -88,32 +102,26 @@ export default function Donate() {
 
           <Button
             type="submit"
-            disabled={loading || !contract}
+            disabled={loading || !writeContract}
             className="w-100 py-3 fw-bold border-0 rounded-pill shadow-sm"
-            bg=""
             style={{
               color: "#c2410c",
-              fontSize: "1.05rem",
-              letterSpacing: "0.3px",
-              opacity: loading || !contract ? 0.7 : 1,
-              transition: "transform 0.2s ease",
-              border: "1px solid black",
               backgroundColor: palePeach,
+              border: "1px solid black",
+              opacity: loading || !writeContract ? 0.7 : 1,
+              transition: "transform 0.2s ease",
             }}
             onMouseEnter={(e) => {
-              console.log("mouse in");
-              e.target.style.backgroundColor = "#c2410c";
-              e.target.style.color = "white";
-
-              if (!loading && contract)
+              if (!loading && writeContract) {
+                e.target.style.backgroundColor = "#c2410c";
+                e.target.style.color = "white";
                 e.target.style.transform = "translateY(-2px)";
+              }
             }}
             onMouseLeave={(e) => {
               e.target.style.backgroundColor = palePeach;
               e.target.style.color = "#c2410c";
-
-              if (!loading && contract)
-                e.target.style.transform = "translateY(0)";
+              e.target.style.transform = "translateY(0)";
             }}
           >
             {loading ? "Processing..." : "Donate Now"}
