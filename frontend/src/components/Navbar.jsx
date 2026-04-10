@@ -5,7 +5,8 @@ import { Wallet, ShieldCheck, Menu, Home, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function NavbarComponent() {
-  const { account, connectWallet, isAdmin } = useContext(Web3Context);
+  const { account, connectWallet, isAdmin, isSpender } =
+    useContext(Web3Context);
 
   // Define main colors
   const primaryWarm = "#ea580c"; // buttons
@@ -160,6 +161,21 @@ export default function NavbarComponent() {
                   }}
                 >
                   Admin
+                </Badge>
+              )}
+              {isSpender && (
+                <Badge
+                  pill
+                  bg=""
+                  className="px-3 py-2 fw-semibold"
+                  style={{
+                    backgroundColor: adminBadgeBg,
+                    color: adminBadgeText,
+                    border: "1px solid #fdba74",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  Spender
                 </Badge>
               )}
               <div
