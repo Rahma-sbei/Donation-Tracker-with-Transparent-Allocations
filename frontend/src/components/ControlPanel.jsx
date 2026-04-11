@@ -101,142 +101,198 @@ export default function ControlPanel() {
     color: "#ffffff",
     boxShadow: "none",
     padding: "0.75rem 1rem",
+    borderRaduis: "15px",
   };
 
   return (
-    <Card
-      className="border-0 shadow-lg rounded-4 mt-3"
-      style={{ backgroundColor: bgDark, color: "#ffffff" }}
-    >
-      <Card.Body className="p-4 p-lg-5">
-        <div
-          className="d-flex align-items-center gap-3 mb-4 pb-4"
-          style={{ borderBottom: `1px solid ${inputBorder}` }}
-        >
+    <>
+      <style>
+        {`
+          .inpColor::placeholder {
+            color: #a0a0a0;
+            opacity: 1;          }
+        `}
+      </style>
+      <Card
+        className="border-0 shadow-lg rounded-4 mt-3"
+        style={{
+          backgroundColor: bgDark,
+          color: "#ffffff",
+          marginBottom: "20px",
+        }}
+      >
+        <Card.Body className="p-4 p-lg-5">
           <div
-            className="p-2 rounded-3"
-            style={{ backgroundColor: "rgba(234, 88, 12, 0.15)" }}
+            className="d-flex align-items-center gap-3 mb-4 pb-4"
+            style={{ borderBottom: `1px solid ${inputBorder}` }}
           >
-            <Settings color={primaryWarm} size={24} />
+            <div
+              className="p-2 rounded-3"
+              style={{ backgroundColor: "rgba(234, 88, 12, 0.15)" }}
+            >
+              <Settings color={primaryWarm} size={24} />
+            </div>
+            <h4 className="m-0 fw-bold">Control Panel</h4>
           </div>
-          <h4 className="m-0 fw-bold">Control Panel</h4>
-        </div>
 
-        <Row className="g-5">
-          {isAdmin && (
-            <Col md={isSpender ? 6 : 12}>
-              <Form onSubmit={handleAddCategory}>
-                <h6 className="mb-3" style={{ color: textMuted }}>
-                  Add Category
-                </h6>
+          <Row className="g-5">
+            {isAdmin && (
+              <Col md={isSpender ? 6 : 12}>
+                <Form onSubmit={handleAddCategory}>
+                  <h6 className="mb-3" style={{ color: textMuted }}>
+                    Add Category
+                  </h6>
 
-                <Form.Control
-                  type="text"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder="e.g., Marketing"
-                  style={darkInputStyle}
-                  className="rounded-3 mb-4"
-                  required
-                />
+                  <Form.Control
+                    type="text"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder="e.g., Marketing"
+                    style={darkInputStyle}
+                    className="inpColor"
+                    required
+                  />
 
-                <Button
-                  type="submit"
-                  disabled={loading || !writeContract}
-                  className="w-100 rounded-pill"
-                >
-                  Add Category
-                </Button>
-              </Form>
-            </Col>
-          )}
+                  <Button
+                    type="submit"
+                    disabled={loading || !writeContract}
+                    style={{
+                      color: "white",
+                      backgroundColor: "#c2410c",
+                      border: "1px solid black",
+                      opacity: loading || !writeContract ? 0.7 : 1,
+                      transition: "transform 0.2s ease",
+                      marginTop: "30px",
+                      width: "100%",
+                      borderRadius: "15px",
+                      fontWeight: "bold",
+                      letterSpacing: "2px",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = "#e9ae97";
+                      e.target.style.color = "#c2410c";
+                      e.target.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = "#c2410c";
+                      e.target.style.color = "white";
+                      e.target.style.transform = "translateY(0)";
+                    }}
+                  >
+                    Add Category
+                  </Button>
+                </Form>
+              </Col>
+            )}
 
-          {isSpender && (
-            <Col md={isAdmin ? 6 : 12}>
-              <Form onSubmit={handleSpend}>
-                <h6 className="mb-3" style={{ color: textMuted }}>
-                  Route Funds
-                </h6>
+            {isSpender && (
+              <Col md={isAdmin ? 6 : 12}>
+                <Form onSubmit={handleSpend}>
+                  <h6 className="mb-3" style={{ color: textMuted }}>
+                    Route Funds
+                  </h6>
 
-                <Form.Control
-                  type="number"
-                  placeholder="Category ID"
-                  value={spendDetails.categoryId}
-                  onChange={(e) =>
-                    setSpendDetails({
-                      ...spendDetails,
-                      categoryId: e.target.value,
-                    })
-                  }
-                  style={darkInputStyle}
-                  className="rounded-3 mb-3"
-                  required
-                />
+                  <Form.Control
+                    type="number"
+                    placeholder="Category ID"
+                    value={spendDetails.categoryId}
+                    onChange={(e) =>
+                      setSpendDetails({
+                        ...spendDetails,
+                        categoryId: e.target.value,
+                      })
+                    }
+                    style={{ ...darkInputStyle, marginBottom: "15px" }}
+                    className="inpColor"
+                    required
+                  />
 
-                <Row className="g-2 mb-3">
-                  <Col xs={4}>
-                    <Form.Control
-                      type="number"
-                      step="0.001"
-                      placeholder="ETH"
-                      value={spendDetails.amount}
-                      onChange={(e) =>
-                        setSpendDetails({
-                          ...spendDetails,
-                          amount: e.target.value,
-                        })
-                      }
-                      style={darkInputStyle}
-                      className="rounded-3"
-                      required
-                    />
-                  </Col>
+                  <Row className="g-2 mb-3">
+                    <Col xs={4}>
+                      <Form.Control
+                        type="number"
+                        step="0.001"
+                        placeholder="ETH"
+                        value={spendDetails.amount}
+                        onChange={(e) =>
+                          setSpendDetails({
+                            ...spendDetails,
+                            amount: e.target.value,
+                          })
+                        }
+                        style={darkInputStyle}
+                        className="inpColor"
+                        required
+                      />
+                    </Col>
 
-                  <Col xs={8}>
-                    <Form.Control
-                      type="text"
-                      placeholder="Destination 0x..."
-                      value={spendDetails.destination}
-                      onChange={(e) =>
-                        setSpendDetails({
-                          ...spendDetails,
-                          destination: e.target.value,
-                        })
-                      }
-                      style={{ ...darkInputStyle, fontFamily: "monospace" }}
-                      className="rounded-3"
-                      required
-                    />
-                  </Col>
-                </Row>
+                    <Col xs={8}>
+                      <Form.Control
+                        type="text"
+                        placeholder="Destination 0x..."
+                        value={spendDetails.destination}
+                        onChange={(e) =>
+                          setSpendDetails({
+                            ...spendDetails,
+                            destination: e.target.value,
+                          })
+                        }
+                        style={{ ...darkInputStyle, fontFamily: "monospace" }}
+                        className="inpColor"
+                        required
+                      />
+                    </Col>
+                  </Row>
 
-                <Form.Control
-                  type="text"
-                  placeholder="Memo (optional)"
-                  value={spendDetails.memo}
-                  onChange={(e) =>
-                    setSpendDetails({
-                      ...spendDetails,
-                      memo: e.target.value,
-                    })
-                  }
-                  style={darkInputStyle}
-                  className="rounded-3 mb-4"
-                />
+                  <Form.Control
+                    type="text"
+                    placeholder="Memo (optional)"
+                    value={spendDetails.memo}
+                    onChange={(e) =>
+                      setSpendDetails({
+                        ...spendDetails,
+                        memo: e.target.value,
+                      })
+                    }
+                    style={darkInputStyle}
+                    className="inpColor"
+                  />
 
-                <Button
-                  type="submit"
-                  disabled={loading || !writeContract}
-                  className="w-100 rounded-pill"
-                >
-                  <Send size={18} />{" "}
-                  {loading ? "Executing..." : "Execute Transfer"}
-                </Button>
-              </Form>
-            </Col>
-          )}
-        </Row>
-      </Card.Body>
-    </Card>
+                  <Button
+                    type="submit"
+                    disabled={loading || !writeContract}
+                    style={{
+                      marginTop: "10px",
+                      width: "100%",
+                      color: "white",
+                      backgroundColor: "#c2410c",
+                      border: "1px solid black",
+                      opacity: loading || !writeContract ? 0.7 : 1,
+                      transition: "transform 0.2s ease",
+                      borderRadius: "15px",
+                      fontWeight: "bold",
+                      letterSpacing: "2px",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = "#e9ae97";
+                      e.target.style.color = "#c2410c";
+                      e.target.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = "#c2410c";
+                      e.target.style.color = "white";
+                      e.target.style.transform = "translateY(0)";
+                    }}
+                  >
+                    <Send size={18} color="white" />{" "}
+                    {loading ? "Executing..." : "Execute Transfer"}
+                  </Button>
+                </Form>
+              </Col>
+            )}
+          </Row>
+        </Card.Body>
+      </Card>
+    </>
   );
 }

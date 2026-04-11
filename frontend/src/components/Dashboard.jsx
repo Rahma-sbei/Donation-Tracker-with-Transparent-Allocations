@@ -6,6 +6,7 @@ import { Activity, Landmark, ArrowUpRight } from "lucide-react";
 export default function Dashboard() {
   const { balance, events } = useContext(Web3Context);
 
+  console.log("current events in transparent functdin", events);
   // Design System Colors
   const primaryWarm = "#ea580c"; // Sunset Orange
   const softPeach = "#ffedd5"; // Warm background for icons and badges
@@ -108,9 +109,9 @@ export default function Dashboard() {
                   </Badge>
                   <p
                     className="m-0 font-monospace"
-                    style={{ color: textMuted, fontSize: "0.85rem" }}
+                    style={{ color: "#9a3412", fontSize: "0.85rem" }}
                   >
-                    To: {ev.destination}
+                    To: {ev.recipient}
                   </p>
                 </div>
                 <div className="text-end">
