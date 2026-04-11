@@ -13,6 +13,7 @@ const CONTRACT_ABI = [
   // read functiosn
   "function categoriesCount() view returns (uint256)",
   "function getCategory(uint256 id) view returns (tuple(uint256 id, string name))",
+  //"function getCategory(uint256 id) view returns (uint256, string)",
   "function availableBalance() view returns (uint256)",
   "function spentByCategory(uint256 id) view returns (uint256)",
 
@@ -24,16 +25,14 @@ const CONTRACT_ABI = [
   // events
   "event CategoryAdded(uint256 id, string name)",
   "event DonationReceived(address indexed donor, uint256 amount)",
-  "event SpendExecuted(uint256 indexed categoryId, address indexed recipient, uint256 amount, string memo)",
+  //"event SpendExecuted(uint256 indexed categoryId, address indexed recipient, uint256 amount, string memo)",
+  "event FundsSpent(uint256 indexed categoryId, address indexed recipient,uint256 amount,string memo)",
 ];
 
 export const Web3Context = createContext();
 
 export const Web3Provider = ({ children }) => {
   const [account, setAccount] = useState(null);
-
-  // const [readProvider, setReadProvider] = useState(null);
-  // const [writeProvider, setWriteProvider] = useState(null);
 
   const [readContract, setReadContract] = useState(null);
   const [writeContract, setWriteContract] = useState(null);
@@ -61,7 +60,7 @@ export const Web3Provider = ({ children }) => {
 
         setReadContract(contract);
 
-        await fetchData(contract, provider);
+        await fetchData(contract);
       } catch (err) {
         console.error("Init error:", err);
       }
@@ -111,10 +110,10 @@ export const Web3Provider = ({ children }) => {
   };
 
   // fetch public data
-  const fetchData = async (contract, provider) => {
+  const fetchData = async (contract) => {
     try {
       // Balance
-      const bal = await provider.getBalance(CONTRACT_ADDRESS);
+      const bal = await contract.availableBalance();
       setBalance(ethers.formatEther(bal));
 
       // Categories
@@ -123,13 +122,16 @@ export const Web3Provider = ({ children }) => {
 
       for (let i = 0; i < count; i++) {
         const c = await contract.getCategory(i);
-        cats.push(c);
+        cats.push({
+          id: Number(c.id),
+          name: c.name,
+        });
       }
 
       setCategories(cats);
 
-      // Events
-      const filter = contract.filters.SpendExecuted();
+      //Events
+      const filter = contract.filters.FundsSpent();
       const logs = await contract.queryFilter(filter);
 
       const formatted = logs
@@ -143,6 +145,7 @@ export const Web3Provider = ({ children }) => {
         .reverse();
 
       setEvents(formatted);
+      console.log("events in context", events);
     } catch (error) {
       console.error("Fetch error:", error);
     }
@@ -157,6 +160,7 @@ export const Web3Provider = ({ children }) => {
         setAccount(null);
         setWriteContract(null);
         setIsAdmin(false);
+        setIsSpender(false);
       } else {
         connectWallet();
       }
