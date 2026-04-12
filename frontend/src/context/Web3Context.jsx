@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
-const RPC_URL = import.meta.env.VITE_RPC_URL;
+//const RPC_URL = import.meta.env.VITE_RPC_URL;
 
 const CONTRACT_ABI = [
   // write functions
@@ -32,6 +32,7 @@ const CONTRACT_ABI = [
 export const Web3Context = createContext();
 
 export const Web3Provider = ({ children }) => {
+  // console.log("CONTRACT:", CONTRACT_ADDRESS);
   const [account, setAccount] = useState(null);
 
   const [readContract, setReadContract] = useState(null);
@@ -50,7 +51,7 @@ export const Web3Provider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const provider = new ethers.JsonRpcProvider(RPC_URL);
+        const provider = new ethers.JsonRpcProvider();
 
         const contract = new ethers.Contract(
           CONTRACT_ADDRESS,
@@ -72,8 +73,10 @@ export const Web3Provider = ({ children }) => {
   //initialize browser provider
 
   const connectWallet = async () => {
+    console.log("CONNECT CLICKED");
+
     if (!window.ethereum) {
-      alert("Please install MetaMask!");
+      alert("MetaMask not found");
       return;
     }
 
@@ -83,6 +86,8 @@ export const Web3Provider = ({ children }) => {
       const browserProvider = new ethers.BrowserProvider(window.ethereum);
       await browserProvider.send("eth_requestAccounts", []);
 
+      const network = await browserProvider.getNetwork();
+      console.log("NETWORK:", network.chainId);
       const signer = await browserProvider.getSigner();
       const address = await signer.getAddress();
 
